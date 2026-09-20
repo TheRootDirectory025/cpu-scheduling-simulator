@@ -1,11 +1,28 @@
+
 def main():
     processes = get_processes()
-    fcfs_scheduled, gantt = fcfs(processes)
-    avg_waiting_time, avg_turnaround_time = calculate_averages(fcfs_scheduled)
-    display_results(fcfs_scheduled, avg_waiting_time, avg_turnaround_time)
-    display_gantt_chart(fcfs_scheduled , gantt)
 
+    print("\n===== FCFS =====")
+    fcfs_scheduled, fcfs_gantt = fcfs(processes)
+    fcfs_avg_waiting, fcfs_avg_turnaround = calculate_averages(fcfs_scheduled)
 
+    display_results(
+        fcfs_scheduled,
+        fcfs_avg_waiting,
+        fcfs_avg_turnaround
+    )
+    display_gantt_chart(fcfs_gantt)
+
+    print("\n===== SJF =====")
+    sjf_scheduled, sjf_gantt = sjf(processes)
+    sjf_avg_waiting, sjf_avg_turnaround = calculate_averages(sjf_scheduled)
+
+    display_results(
+        sjf_scheduled,
+        sjf_avg_waiting,
+        sjf_avg_turnaround
+    )
+    display_gantt_chart(sjf_gantt)
 
 def get_processes():
     num_of_proceese = int(input("Number of processes:"))
@@ -24,7 +41,7 @@ def get_processes():
 
 def fcfs(processes):
     gantt = []
-    processes_sorted = processes.copy()
+    processes_sorted = [process.copy() for process in processes]
     processes_sorted.sort(key=lambda process: process[1])
     current_time = 0
 
@@ -50,6 +67,62 @@ def fcfs(processes):
 
     return processes_sorted, gantt
 
+def sjf(processes):
+    gantt = []
+    scheduled_processes = []
+    current_time = 0
+    remaining_processes = [process.copy() for process in processes]
+    while remaining_processes :
+        ready_processes = []
+        for process in remaining_processes:
+            if current_time >= process[1]:
+                ready_processes.append(process)
+        min_burst_time = 10000
+
+        selected_process = None
+        for process in ready_processes:
+            if process[2] < min_burst_time:
+                min_burst_time = process[2]
+                selected_process = process
+
+
+
+        if selected_process is None:
+            next_arrival_time = 10000
+
+            for process in remaining_processes:
+                if process[1] < next_arrival_time:
+                    next_arrival_time = process[1]
+            gantt.append(["IDLE", current_time, next_arrival_time])
+            current_time = next_arrival_time
+            continue
+
+        arrival_time = selected_process[1]
+        burst_time = selected_process[2]
+
+
+        if current_time < arrival_time:
+            start_time = arrival_time
+        else:
+            start_time = current_time
+        completion_time = start_time + burst_time
+        gantt.append([selected_process[0], start_time, completion_time])
+        current_time = completion_time
+        waiting_time = start_time - arrival_time
+        turnaround_time = completion_time - arrival_time
+
+
+        selected_process.append(start_time)
+        selected_process.append(completion_time)
+        selected_process.append(waiting_time)
+        selected_process.append(turnaround_time)
+
+
+        scheduled_processes.append(selected_process)
+        remaining_processes.remove(selected_process)
+
+
+    return scheduled_processes  , gantt
 
 def calculate_averages(processes):
     sum_of_waiting_time = 0
