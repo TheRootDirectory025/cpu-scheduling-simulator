@@ -108,7 +108,6 @@ def fcfs(processes):
         arrival_time = process[1]
         burst_time = process[2]
         if current_time < arrival_time:
-            idle_time = arrival_time - current_time
             gantt.append(["IDLE", current_time, arrival_time])
             start_time = arrival_time
 
