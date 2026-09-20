@@ -29,11 +29,27 @@ def get_processes():
             print("Please enter a valid integer.")
 
     processes = []
-
+    process_ids = set()
     for i in range(num_of_proceese):
         process = []
         print(f"Enter data for process {i + 1}")
-        process.append(input("Enter Process ID:"))
+
+        # Process ID control
+        while True:
+            # Adding unique process ID
+            process_id = input("Enter Process ID: ").strip()
+
+            if not process_id.strip():
+                print("Process ID cannot be empty.")
+            elif process_id in process_ids:
+                print("Process ID must be unique.")
+            else:
+                break
+
+        process_ids.add(process_id)
+        process.append(process_id)
+
+
 
         # Arrival time control
         while True:
@@ -120,7 +136,7 @@ def sjf(processes):
         for process in remaining_processes:
             if current_time >= process[1]:
                 ready_processes.append(process)
-        min_burst_time = 10000
+        min_burst_time = float("inf")
 
         selected_process = None
         for process in ready_processes:
@@ -131,7 +147,7 @@ def sjf(processes):
 
 
         if selected_process is None:
-            next_arrival_time = 10000
+            next_arrival_time = float("inf")
 
             for process in remaining_processes:
                 if process[1] < next_arrival_time:
