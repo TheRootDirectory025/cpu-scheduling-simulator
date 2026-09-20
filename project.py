@@ -1,43 +1,86 @@
 
 def main():
-    processes = get_processes()
+    choice = choose_algorithm()
+    if choice == "1":
+        processes = get_processes()
+        processes_sorted, gantt = fcfs(processes)
+        avg_waiting_time, avg_turnaround_time = calculate_averages(processes_sorted)
+        display_results(processes_sorted, avg_waiting_time, avg_turnaround_time)
+        display_gantt_chart(gantt)
 
-    print("\n===== FCFS =====")
-    fcfs_scheduled, fcfs_gantt = fcfs(processes)
-    fcfs_avg_waiting, fcfs_avg_turnaround = calculate_averages(fcfs_scheduled)
+    elif choice == "2":
+        processes = get_processes()
+        processes_sorted, gantt = sjf(processes)
+        avg_waiting_time, avg_turnaround_time = calculate_averages(processes_sorted)
+        display_results(processes_sorted, avg_waiting_time, avg_turnaround_time)
+        display_gantt_chart(gantt)
 
-    display_results(
-        fcfs_scheduled,
-        fcfs_avg_waiting,
-        fcfs_avg_turnaround
-    )
-    display_gantt_chart(fcfs_gantt)
-
-    print("\n===== SJF =====")
-    sjf_scheduled, sjf_gantt = sjf(processes)
-    sjf_avg_waiting, sjf_avg_turnaround = calculate_averages(sjf_scheduled)
-
-    display_results(
-        sjf_scheduled,
-        sjf_avg_waiting,
-        sjf_avg_turnaround
-    )
-    display_gantt_chart(sjf_gantt)
+    elif choice == "3":
+        return 0
 
 def get_processes():
-    num_of_proceese = int(input("Number of processes:"))
+    while True :
+        try :
+            num_of_proceese = int(input("Number of processes:"))
+            if num_of_proceese > 0:
+                break
+            print("Number of processes must be greater than 0.")
+        except ValueError:
+            print("Please enter a valid integer.")
+
     processes = []
 
     for i in range(num_of_proceese):
         process = []
         print(f"Enter data for process {i + 1}")
         process.append(input("Enter Process ID:"))
-        process.append(int(input("Arrival time: ")))
-        process.append(int(input("Burst time: ")))
+
+        # Arrival time control
+        while True:
+            try:
+                arrival_time = int(input("Arrival time: "))
+
+                if arrival_time >= 0:
+                    break
+
+                print("Arrival time cannot be negative.")
+
+            except ValueError:
+                print("Please enter a valid integer.")
+
+        process.append(arrival_time)
+
+        # Burst time
+        while True:
+            try:
+                burst_time = int(input("Burst time: "))
+
+                if burst_time > 0:
+                    break
+
+                print("Burst time must be greater than 0.")
+
+            except ValueError:
+                print("Please enter a valid integer.")
+
+        process.append(burst_time)
         processes.append(process)
 
     return processes
 
+def choose_algorithm():
+    while True:
+        print("\n===== CPU Scheduling Simulator =====")
+        print("1. FCFS")
+        print("2. SJF")
+        print("3. Exit")
+
+        choice = input("Choose an option: ")
+
+        if choice in ["1", "2", "3"]:
+            return choice
+
+        print("Invalid option. Please choose 1, 2, or 3.")
 
 def fcfs(processes):
     gantt = []
