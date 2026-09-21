@@ -1,5 +1,7 @@
 # CPU Scheduling Simulator
 
+#### Video Demo: https://youtu.be/uL2q3YUoZHU
+
 A Python-based CPU scheduling simulator for exploring process scheduling algorithms.
 
 ## Description
@@ -7,6 +9,7 @@ A Python-based CPU scheduling simulator for exploring process scheduling algorit
 This project simulates CPU scheduling using a queue of processes.
 
 Each process has:
+
 - Process ID
 - Arrival Time
 - Burst Time
@@ -16,13 +19,16 @@ The simulator supports two scheduling algorithms:
 - First-Come, First-Served (FCFS)
 - Shortest Job First (SJF)
 
+Both algorithms are implemented as non-preemptive scheduling algorithms.
+
 For each process, the simulator calculates:
+
 - Start Time
 - Completion Time
 - Waiting Time
 - Turnaround Time
 
-It also displays a Gantt chart and calculates the average waiting time and average turnaround time.
+The simulator also displays a Gantt chart and calculates the average waiting time and average turnaround time.
 
 ## Scheduling Algorithms
 
